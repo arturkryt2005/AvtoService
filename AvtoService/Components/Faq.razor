@@ -1,0 +1,124 @@
+﻿@page "/faq"
+@rendermode InteractiveServer
+@using AvtoService.Components.Layout
+@inject IJSRuntime JSRuntime
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Запись на обслуживание</h2>
+        <form>
+            <label for="name">Ваше имя:</label>
+            <input type="text" id="name" name="name" placeholder="Введите ваше имя" required>
+
+            <label for="phone">Ваш телефон:</label>
+            <input type="tel" id="phone" name="phone" placeholder="+7 (XXX) XXX-XX-XX" required>
+
+            <label for="service">Выберите услугу:</label>
+            <select id="service" name="service" required>
+                <option value="">-- Выберите услугу --</option>
+                <option value="Техническое обслуживание">Техническое обслуживание</option>
+                <option value="Ремонт после ДТП">Ремонт после ДТП</option>
+                <option value="Замена масла и фильтров">Замена масла и фильтров</option>
+                <option value="Шиномонтаж">Шиномонтаж</option>
+                <option value="Диагностика аккумулятора">Диагностика аккумулятора</option>
+            </select>
+
+            <label for="date">Выберите дату:</label>
+            <input type="date" id="date" name="date" required>
+
+            <button type="submit" class="submit-button">Отправить</button>
+        </form>
+    </div>
+</div>
+
+<div class="container">
+    <div class="sidebar">
+        <h2>Наши услуги</h2>
+        <ul>
+            <li><i class="fas fa-tools"></i> Техническое обслуживание</li>
+            <li><i class="fas fa-car-crash"></i> Ремонт после ДТП</li>
+            <li><i class="fas fa-oil-can"></i> Замена масла и фильтров</li>
+            <li><i class="fas fa-tire"></i> Шиномонтаж</li>
+            <li><i class="fas fa-battery-full"></i> Диагностика аккумулятора</li>
+        </ul>
+        <button class="buy-button" id="appointmentButton">Записаться</button>
+        <button class="buy-button" id="scrollButton">Отзывы</button>
+    </div>
+    <div class="content">
+        <div class="carousel">
+            <div class="arrow left">&lt;</div>
+            <img src="../img/bugatti.jpg" alt="Автосервис">
+            <div class="arrow right">&gt;</div>
+        </div>
+    </div>
+</div>
+
+<div id="faq" class="faq">
+    <h2 class="h2zag">Часто задаваемые вопросы</h2>
+    <div class="faq-item">
+        <h3>Вопрос 1: Как записаться на обслуживание?</h3>
+        <p>Ответ: Вы можете записаться через наш сайт, нажав кнопку "Записаться", или позвонив по телефону: +7 (XXX) XXX-XX-XX.</p>
+    </div>
+    <div class="faq-item">
+        <h3>Вопрос 2: Какие виды ремонта вы выполняете?</h3>
+        <p>Ответ: Мы выполняем все виды ремонта: от замены масла до кузовного ремонта после ДТП.</p>
+    </div>
+    <div class="faq-item">
+        <h3>Вопрос 3: Сколько времени занимает диагностика?</h3>
+        <p>Ответ: Стандартная диагностика занимает от 30 минут до 2 часов, в зависимости от сложности.</p>
+    </div>
+    <div class="faq-item">
+        <h3>Вопрос 4: Есть ли у вас гарантия на работы?</h3>
+        <p>Ответ: Да, мы предоставляем гарантию на все виды работ сроком до 1 года.</p>
+    </div>
+    <div class="faq-item">
+        <h3>Вопрос 5: Можно ли приехать без записи?</h3>
+        <p>Ответ: Да, но мы рекомендуем записываться заранее, чтобы избежать ожидания.</p>
+    </div>
+</div>
+
+<div id="reviews" class="reviews">
+    <h2 id="targetElement" class="h2zag">Отзывы наших клиентов</h2>
+    <div class="review-item">
+        <p class="review-author"><strong>Алексей:</strong></p>
+        <p class="review-text">Отличный сервис! Быстро устранили неполадку с двигателем. Рекомендую!</p>
+        <div class="review-rating">
+            ⭐⭐⭐⭐⭐
+        </div>
+    </div>
+    <div class="review-item">
+        <p class="review-author"><strong>Мария:</strong></p>
+        <p class="review-text">Очень довольна качеством кузовного ремонта. Машина как новая!</p>
+        <div class="review-rating">
+            ⭐⭐⭐⭐⭐
+        </div>
+    </div>
+    <div class="review-item">
+        <p class="review-author"><strong>Иван:</strong></p>
+        <p class="review-text">Профессиональная диагностика, всё объяснили и показали. Спасибо!</p>
+        <div class="review-rating">
+            ⭐⭐⭐⭐⭐
+        </div>
+    </div>
+</div>
+
+<ContForm />
+
+@code{
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                Console.WriteLine("Calling initializeComponents...");
+                await JSRuntime.InvokeVoidAsync("initializeComponents");
+            }
+            catch (JSException ex)
+            {
+                Console.WriteLine($"Error initializing components: {ex.Message}");
+            }
+        }
+    }
+}

@@ -1,0 +1,86 @@
+﻿footer {
+    background-color: #1a1a1a;
+    padding: 50px 0;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    margin-top: 100px;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-around;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.footer-section {
+    width: 30%;
+}
+
+    .footer-section h3 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #FF4400;
+        font-family: 'Montserrat Black', sans-serif;
+    }
+
+    .footer-section p {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #ccc;
+    }
+
+    .footer-section ul {
+        list-style: none;
+        padding: 0;
+    }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+            .footer-section ul li a {
+                color: #ccc;
+                text-decoration: none;
+                font-size: 16px;
+                transition: color 0.3s;
+            }
+
+                .footer-section ul li a:hover {
+                    color: #FF4400;
+                }
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+}
+
+    .social-icons a {
+        color: #ccc;
+        font-size: 24px;
+        transition: color 0.3s;
+    }
+
+        .social-icons a:hover {
+            color: #FF4400;
+        }
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 50px;
+    padding-top: 20px;
+    border-top: 1px solid #333;
+    font-size: 14px;
+    color: #ccc;
+}
+
+    .footer-bottom a {
+        color: #FF4400;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+        .footer-bottom a:hover {
+            color: white;
+        }

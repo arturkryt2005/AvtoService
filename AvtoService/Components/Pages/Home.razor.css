@@ -1,0 +1,193 @@
+﻿body {
+    background-color: black;
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    color: white;
+}
+
+.firstsection {
+    background-color: white;
+    height: 40vh;
+}
+
+.glavdiv {
+    display: flex;
+    justify-content: center;
+    margin-top: -200px;
+}
+
+.sectionwkart {
+    position: relative;
+    width: 70%;
+    border-radius: 30px;
+    overflow: hidden;
+}
+
+    .sectionwkart img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+.priceh1 {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 70px;
+    z-index: 1;
+    padding: 20px 40px;
+    background: black;
+    border-radius: 20px 20px 0 0;
+    margin: 0;
+    font-family: 'Montserrat Black', sans-serif;
+    text-align: center;
+}
+
+.h1price {
+    font-size: 50px;
+    color: white;
+    font-family: 'Montserrat Black', sans-serif;
+    text-align: center;
+    margin-top: 10%;
+    margin-bottom: 5%;
+}
+
+.pricingplans {
+    display: flex;
+    justify-content: center;
+    color: white;
+    width: 100%;
+    align-items: center;
+    padding: 20px;
+}
+
+.plan {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    max-width: 1200px;
+}
+
+.leftplan {
+    width: 50%;
+}
+
+.blueprice {
+    color: #FF4400;
+    font-family: 'Montserrat Black', sans-serif;
+    font-size: 35px;
+    margin: 0;
+}
+
+.buy {
+    margin-bottom: 10%;
+}
+
+.buybutton {
+    padding: 15px 20px;
+    border-radius: 10px;
+    border: 2px solid #FF4400;
+    background-color: #FF4400;
+    color: white;
+    cursor: pointer;
+    font-family: 'Montserrat Medium', sans-serif;
+    font-size: 15px;
+    margin-top: 30px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+    .buybutton:hover {
+        background-color: white;
+        color: #000000;
+    }
+
+.peredknopkoi {
+    margin-top: 0;
+}
+
+.priceh2 {
+    margin-top: 0;
+}
+
+.moet {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #FF4400;
+    background-color: transparent;
+    padding: 20px;
+    border-radius: 30px;
+}
+
+.moetjpg {
+    border-radius: 30px;
+    width: 100%;
+    height: 80%;
+}
+
+.zvonit {
+    color: white;
+    font-size: 30px;
+    margin: 20px 0;
+    font-family: Montserrat;
+}
+
+.nomertel {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .nomertel img {
+        width: 30px;
+        height: 30px;
+    }
+
+    .nomertel h1 {
+        font-size: 24px;
+        margin: 0;
+    }
+
+.allcont {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.forcard {
+    width: 70%;
+    display: flex;
+    justify-content: center;
+    margin-top: 5%;
+}
+
+.cardd {
+    background-color: #FF4400;
+    border-radius: 20px;
+    height: 20vh;
+    width: 24%;
+    padding-left: 3%;
+    padding-top: 2%;
+    margin-right: 3%;
+}
+
+.zagincont {
+    color: white;
+    font-family: Montserrat;
+    margin: 0;
+    font-size: 30px;
+}
+
+.stolb{
+    margin-top: 20px;
+}
+
+.numbb {
+    margin: 0;
+    color: white;
+    font-family: Montserrat;
+    font-size: 20px;
+}

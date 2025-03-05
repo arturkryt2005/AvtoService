@@ -1,0 +1,36 @@
+﻿header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 10%;
+    background-color: black;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: Montserrat;
+}
+
+nav {
+    display: flex;
+    gap: 20px;
+    font-family: Montserrat;
+}
+
+.ssilka {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 10px 20px;
+    border-bottom: 2px solid black;
+    font-family: Montserrat;
+}
+
+    .ssilka:hover {
+        background-color: #FF4400;
+        border-bottom: 2px solid white;
+    }
+
+.carlogo{
+    width: 40px;
+    height: 40px;
+}
+

@@ -1,0 +1,160 @@
+﻿@page "/choose-service"
+
+<div class="service-page">
+    <div class="service-header">
+        <h1>Выберите услугу для вашего автомобиля</h1>
+        <p>Мы предлагаем широкий спектр услуг для вашего автомобиля. Выберите нужную услугу и оставьте заявку прямо сейчас!</p>
+    </div>
+
+    <div class="filters">
+        <select id="filter-category">
+            <option value="all">Все категории</option>
+            <option value="maintenance">Техническое обслуживание</option>
+            <option value="repair">Ремонт</option>
+            <option value="diagnostics">Диагностика</option>
+            <option value="tires">Шины и диски</option>
+            <option value="electronics">Электроника</option>
+        </select>
+        <select id="sort-by">
+            <option value="popularity">По популярности</option>
+            <option value="price-low">По цене (сначала дешевые)</option>
+            <option value="price-high">По цене (сначала дорогие)</option>
+        </select>
+    </div>
+
+    <div class="service-list">
+        <!-- Техническое обслуживание -->
+        <div class="service-card" data-category="maintenance">
+            <i class="fas fa-tools"></i>
+            <h3>Техническое обслуживание</h3>
+            <p>Регулярное ТО для поддержания вашего автомобиля в идеальном состоянии.</p>
+            <button class="details-button">Подробнее</button>
+            <button class="book-button">Записаться</button>
+        </div>
+        <div class="service-card" data-category="maintenance">
+            <i class="fas fa-oil-can"></i>
+            <h3>Замена масла и фильтров</h3>
+            <p>Профессиональная замена масла и всех видов фильтров.</p>
+            <button class="details-button">Подробнее</button>
+            <button class="book-button">Записаться</button>
+        </div>
+
+        <!-- Ремонт -->
+        <div class="service-card" data-category="repair">
+            <i class="fas fa-car-crash"></i>
+            <h3>Ремонт после ДТП</h3>
+            <p>Качественный ремонт кузова и механических повреждений после аварий.</p>
+            <button class="details-button">Подробнее</button>
+            <button class="book-button">Записаться</button>
+        </div>
+        <div class="service-card" data-category="repair">
+            <i class="fas fa-wrench"></i>
+            <h3>Ремонт двигателя</h3>
+            <p>Диагностика и ремонт двигателя любой сложности.</p>
+            <button class="details-button">Подробнее</button>
+            <button class="book-button">Записаться</button>
+        </div>
+
+        <!-- Диагностика -->
+        <div class="service-card" data-category="diagnostics">
+            <i class="fas fa-car-battery"></i>
+            <h3>Диагностика аккумулятора</h3>
+            <p>Проверка состояния аккумулятора и замена при необходимости.</p>
+            <button class="details-button">Подробнее</button>
+            <button class="book-button">Записаться</button>
+        </div>
+        <div class="service-card" data-category="diagnostics">
+            <i class="fas fa-check-circle"></i>
+            <h3>Комплексная диагностика</h3>
+            <p>Полная проверка всех систем автомобиля.</p>
+            <button class="details-button">Подробнее</button>
+            <button class="book-button">Записаться</button>
+        </div>
+
+        <!-- Шины и диски -->
+        <div class="service-card" data-category="tires">
+            <i class="fas fa-tire"></i>
+            <h3>Шиномонтаж</h3>
+            <p>Профессиональный шиномонтаж и балансировка колес.</p>
+            <button class="details-button">Подробнее</button>
+            <button class="book-button">Записаться</button>
+        </div>
+        <div class="service-card" data-category="tires">
+            <i class="fas fa-snowflake"></i>
+            <h3>Замена зимней резины</h3>
+            <p>Сезонная замена и хранение шин.</p>
+            <button class="details-button">Подробнее</button>
+            <button class="book-button">Записаться</button>
+        </div>
+
+        <!-- Электроника -->
+        <div class="service-card" data-category="electronics">
+            <i class="fas fa-bolt"></i>
+            <h3>Ремонт электроники</h3>
+            <p>Диагностика и ремонт электронных систем автомобиля.</p>
+            <button class="details-button">Подробнее</button>
+            <button class="book-button">Записаться</button>
+        </div>
+        <div class="service-card" data-category="electronics">
+            <i class="fas fa-lightbulb"></i>
+            <h3>Замена фар</h3>
+            <p>Установка и замена фар, противотуманок и других осветительных приборов.</p>
+            <button class="details-button">Подробнее</button>
+            <button class="book-button">Записаться</button>
+        </div>
+    </div>
+
+    <div class="advantages">
+        <h2>Почему выбирают нас?</h2>
+        <div class="advantages-list">
+            <div class="advantage">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Гарантия на работы</h3>
+                <p>Мы предоставляем гарантию на все виды работ сроком до 1 года.</p>
+            </div>
+            <div class="advantage">
+                <i class="fas fa-users"></i>
+                <h3>Опытные мастера</h3>
+                <p>Наши специалисты имеют более 10 лет опыта в авторемонте.</p>
+            </div>
+            <div class="advantage">
+                <i class="fas fa-cogs"></i>
+                <h3>Оригинальные запчасти</h3>
+                <p>Используем только оригинальные запчасти от проверенных поставщиков.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="reviews">
+        <h2>Отзывы наших клиентов</h2>
+        <div class="review-item">
+            <p class="review-author"><strong>Алексей:</strong></p>
+            <p class="review-text">Отличный сервис! Быстро устранили неполадку с двигателем. Рекомендую!</p>
+            <div class="review-rating">
+                ⭐⭐⭐⭐⭐
+            </div>
+        </div>
+        <div class="review-item">
+            <p class="review-author"><strong>Мария:</strong></p>
+            <p class="review-text">Очень довольна качеством кузовного ремонта. Машина как новая!</p>
+            <div class="review-rating">
+                ⭐⭐⭐⭐⭐
+            </div>
+        </div>
+    </div>
+
+    <div class="booking-form">
+        <h2>Запишитесь на услугу прямо сейчас!</h2>
+        <form>
+            <input type="text" placeholder="Ваше имя" required>
+            <input type="tel" placeholder="Ваш телефон" required>
+            <select required>
+                <option value="">Выберите услугу</option>
+                <option value="maintenance">Техническое обслуживание</option>
+                <option value="repair">Ремонт после ДТП</option>
+                <option value="diagnostics">Диагностика аккумулятора</option>
+            </select>
+            <button type="submit">Отправить заявку</button>
+        </form>
+    </div>
+</div>
