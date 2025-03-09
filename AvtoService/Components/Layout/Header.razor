@@ -1,13 +1,31 @@
-﻿<header>
-    <img src="../img/mashina.png" alt="car" class="carlogo">
-    <nav>
-        <a href="/" class="ssilka">О нас</a>
-        <a href="choose-service" class="ssilka">Выбрать услугу</a>
-        <a href="prices" class="ssilka">Цены</a>
-        <a href="faq" class="ssilka">FAQ</a>
+﻿@rendermode InteractiveServer
+
+<header class="main-header">
+    <div class="logo-container">
+        <img src="img/mashina.png" alt="car" class="carlogo" />
+    </div>
+
+    <nav class="main-nav">
+        <NavLink class="nav-link" href="/">О нас</NavLink>
+        <NavLink class="nav-link" href="choose-service">Выбрать услугу</NavLink>
+        <NavLink class="nav-link" href="prices">Цены</NavLink>
+        <NavLink class="nav-link" href="faq">FAQ</NavLink>
+        <NavLink class="nav-link" href="users">usersAd</NavLink>
+
     </nav>
+
+    <button class="auth-button" @onclick="ToggleAuthModal">
+        Вход/Регистрация
+    </button>
+
+    <AuthModal @ref="_authModal" OnClose="StateHasChanged" />
 </header>
 
 @code {
+    private AuthModal _authModal;
 
+    private void ToggleAuthModal()
+    {
+        _authModal.Toggle();
+    }
 }

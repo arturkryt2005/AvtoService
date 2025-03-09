@@ -1,0 +1,94 @@
+﻿@using AvtoService.Data.Models
+@using AvtoService.Data.Requests
+@using Blazored.LocalStorage
+@if (Show)
+{
+    <div class="modal-overlay" @onclick="Close">
+        <div class="modal-content2" @onclick:stopPropagation>
+            <div class="modal-header">
+                <h3>@(IsLoginMode ? "Вход" : "Регистрация")</h3>
+                <button class="close-button" @onclick="Close">×</button>
+            </div>
+
+            <div class="auth-tabs">
+                <button class="tab-button @(IsLoginMode ? "active" : "")"
+                        @onclick="() => IsLoginMode = true">
+                    Вход
+                </button>
+                <button class="tab-button @(!IsLoginMode ? "active" : "")"
+                        @onclick="() => IsLoginMode = false">
+                    Регистрация
+                </button>
+            </div>
+
+            <form @onsubmit:preventDefault>
+                <div class="form-group">
+                    <input type="text" placeholder="Логин"
+                           @bind="LoginModel.Login" required />
+                </div>
+                <div class="form-group">
+                    <input type="password" placeholder="Пароль"
+                           @bind="LoginModel.Password" required />
+                </div>
+                <button type="submit" class="auth-submit"
+                        @onclick="HandleAuth">
+                    @(IsLoginMode ? "Войти" : "Зарегистрироваться")
+                </button>
+                @if (!string.IsNullOrEmpty(ErrorMessage))
+                {
+                    <div class="error-message">@ErrorMessage</div>
+                }
+            </form>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public EventCallback OnClose { get; set; }
+    public bool Show { get; private set; }
+    public bool IsLoginMode { get; set; } = true;
+    public string ErrorMessage { get; set; }
+    public LoginRequest LoginModel { get; set; } = new();
+    public RegisterRequest RegisterModel { get; set; } = new();
+
+    [Inject] public HttpClient Http { get; set; }
+    [Inject] public NavigationManager NavManager { get; set; }
+    [Inject] public ILocalStorageService LocalStorage { get; set; }
+
+    public void Toggle() => Show = !Show;
+
+    private async Task HandleAuth()
+    {
+        try
+        {
+            HttpResponseMessage response;
+            if (IsLoginMode)
+                response = await Http.PostAsJsonAsync("api/Auth/login", LoginModel);
+            else
+                response = await Http.PostAsJsonAsync("api/Auth/register", RegisterModel);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var authResult = await response.Content.ReadFromJsonAsync<AuthResponse>();
+                await LocalStorage.SetItemAsStringAsync("authToken", authResult.Token);
+                Close();
+                NavManager.NavigateTo("/");
+            }
+            else
+            {
+                ErrorMessage = await response.Content.ReadAsStringAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = "Ошибка соединения";
+        }
+    }
+
+    private void Close()
+    {
+        Show = false;
+        ErrorMessage = "";
+        OnClose.InvokeAsync();
+    }
+}

@@ -1,0 +1,44 @@
+﻿@page "/users"
+
+<h1 class="h1fromseconddiv2">Список пользователей</h1>
+
+<div class="forblokcs">
+    <div class="blocks">
+        @if (users == null)
+        {
+            <p>Загрузка данных...</p>
+        }
+        else
+        {
+            @foreach (var user in users)
+            {
+                <div class="block">
+                    <h1 class="zafinblock">@user.Login</h1>
+                    <h1 class="price">@user.Password</h1>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@code {
+    private List<User> users;
+
+    protected override void OnInitialized()
+    {
+        users = new List<User>
+        {
+            new User { Login = "Иван", Password = "ivan123" },
+            new User { Login = "Петр", Password = "petr123" },
+            new User { Login = "Алексей", Password = "alex123" },
+            new User { Login = "Мария", Password = "mary123" },
+            new User { Login = "Ольга", Password = "olga123" }
+        };
+    }
+
+    public class User
+    {
+        public string Login { get; set; }
+        public string Password { get; set; }
+    }
+}
