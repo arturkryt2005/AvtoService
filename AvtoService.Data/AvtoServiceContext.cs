@@ -18,6 +18,8 @@ namespace AvtoService.Data
         public DbSet<OrderPart> OrderParts { get; set; }
         public DbSet<OrderService> OrderServices { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<ContactForm> ContactForm { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -11,7 +11,6 @@ namespace AvtoService.Data.Models
         public string? Token { get; set; }
         public int Id { get; set; }
         public string? Login { get; set; }
-        public string? Password { get; set; }
         public string? Role { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -9,10 +10,10 @@ namespace AvtoService.Data.Requests
 {
     public class LoginRequest
     {
-        [JsonPropertyName("Login")]
+        [Required]
         public string? Login { get; set; }
 
-        [JsonPropertyName("Password")]
+        [Required]
         public string? Password { get; set; }
 
     }

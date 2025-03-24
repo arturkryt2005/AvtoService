@@ -34,3 +34,50 @@ nav {
     height: 40px;
 }
 
+.auth-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(45deg, #ff9a00, #ff3d00); 
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+    .auth-button::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 300%;
+        height: 300%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 70%);
+        transform: translate(-50%, -50%) scale(0);
+        transition: transform 0.5s ease;
+        border-radius: 50%;
+    }
+
+    .auth-button:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        transform: translateY(-2px);
+    }
+
+    .auth-button:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .auth-button:hover::before {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    .auth-button:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(255, 61, 0, 0.5); 
+    }

@@ -1,0 +1,66 @@
+﻿@page "/contact-admin"
+@using AvtoService.Data.Models
+@inject HttpClient Http
+@rendermode InteractiveServer
+
+<h3 class="zontact">Contact Admin</h3>
+
+@if (contactForms == null)
+{
+    <p>Загрузка данных...</p>
+}
+else
+{
+    <div class="contact-grid">
+        @foreach (var contact in contactForms)
+        {
+            <div class="contact-card">
+                <div class="contact-header">
+                    <h4>@contact.Name</h4>
+                    <span class="contact-date">@contact.SubmissionDate.ToString("yyyy-MM-dd HH:mm:ss")</span>
+                </div>
+                <div class="contact-body">
+                    <p><strong>Почта:</strong> @contact.Email</p>
+                    <p><strong>Телефон:</strong> @contact.Phone</p>
+                    <p><strong>Тема:</strong> @contact.Subject</p>
+                    <p><strong>Доп. Информация:</strong> @contact.AdditionalInfo</p>
+                </div>
+                <div class="contact-actions">
+                    <button class="btn btn-danger" @onclick="() => DeleteContactForm(contact.Id)">Уже связались.</button>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<ContactForm> contactForms = new List<ContactForm>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadContactForms();
+    }
+
+    private async Task LoadContactForms()
+    {
+        var baseAddress = "https://localhost:7292/";
+        var requestUri = $"{baseAddress}api/ContactForm";
+        contactForms = await Http.GetFromJsonAsync<List<ContactForm>>(requestUri);
+    }
+
+    private async Task DeleteContactForm(int id)
+    {
+        var baseAddress = "https://localhost:7292/";
+        var requestUri = $"{baseAddress}api/ContactForm/{id}";
+        var response = await Http.DeleteAsync(requestUri);
+
+        if (response.IsSuccessStatusCode)
+        {
+            await LoadContactForms();
+        }
+        else
+        {
+            Console.WriteLine("Ошибка при удалении записи.");
+        }
+    }
+}

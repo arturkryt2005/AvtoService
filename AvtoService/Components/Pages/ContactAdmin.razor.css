@@ -1,0 +1,70 @@
+﻿.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    font-family: Montserrat;
+}
+
+.zontact {
+    color: white;
+    font-family: Montserrat;
+    text-align: center;
+}
+
+.contact-card {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 16px;
+    color: #fff;
+    transition: transform 0.2s ease-in-out;
+}
+
+    .contact-card:hover {
+        transform: scale(1.02);
+    }
+
+.contact-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+    .contact-header h4 {
+        margin: 0;
+        color: #ff8c42;
+    }
+
+.contact-date {
+    font-size: 0.9em;
+    color: #aaa;
+}
+
+.contact-body {
+    margin-bottom: 12px;
+}
+
+    .contact-body p {
+        margin: 8px 0;
+    }
+
+.contact-actions {
+    text-align: right;
+}
+
+.btn-danger {
+    background-color: palegreen;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    color: black;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+    .btn-danger:hover {
+        background-color: green;
+        color: white;
+    }

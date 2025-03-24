@@ -16,12 +16,12 @@ namespace AvtoService.Data.Models
         public int Id { get; set; }
 
         [Column("Login")]
-        public string Login { get; set; }
+        public string? Login { get; set; }
 
         [Column("Password")]
-        public string Password { get; set; }
+        public string? Password { get; set; }
 
         [Column("Role")]
-        public string Role { get; set; }
+        public string? Role { get; set; }
     }
 }

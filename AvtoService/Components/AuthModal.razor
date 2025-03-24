@@ -1,6 +1,12 @@
 ﻿@using AvtoService.Data.Models
 @using AvtoService.Data.Requests
 @using Blazored.LocalStorage
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IHttpClientFactory HttpClientFactory
+@inject ILocalStorageService LocalStorage
+@rendermode InteractiveServer
+
 @if (Show)
 {
     <div class="modal-overlay" @onclick="Close">
@@ -24,16 +30,22 @@
             <form @onsubmit:preventDefault>
                 <div class="form-group">
                     <input type="text" placeholder="Логин"
-                           @bind="LoginModel.Login" required />
+                           value="@(IsLoginMode ? LoginModel.Login : RegisterModel.Login)"
+                           @oninput="e => { UpdateLogin(e.Value.ToString()); }"
+                           required />
                 </div>
                 <div class="form-group">
                     <input type="password" placeholder="Пароль"
-                           @bind="LoginModel.Password" required />
+                           value="@(IsLoginMode ? LoginModel.Password : RegisterModel.Password)"
+                           @oninput="e => { UpdatePassword(e.Value.ToString()); }"
+                           required />
                 </div>
                 <button type="submit" class="auth-submit"
-                        @onclick="HandleAuth">
+                        @onclick="async () => await HandleAuth()"
+                        disabled="@(IsSubmitButtonDisabled)">
                     @(IsLoginMode ? "Войти" : "Зарегистрироваться")
                 </button>
+
                 @if (!string.IsNullOrEmpty(ErrorMessage))
                 {
                     <div class="error-message">@ErrorMessage</div>
@@ -47,48 +59,129 @@
     [Parameter] public EventCallback OnClose { get; set; }
     public bool Show { get; private set; }
     public bool IsLoginMode { get; set; } = true;
-    public string ErrorMessage { get; set; }
+    public string ErrorMessage { get; set; } = string.Empty;
     public LoginRequest LoginModel { get; set; } = new();
     public RegisterRequest RegisterModel { get; set; } = new();
-
-    [Inject] public HttpClient Http { get; set; }
+    private bool isLoading = true;
     [Inject] public NavigationManager NavManager { get; set; }
-    [Inject] public ILocalStorageService LocalStorage { get; set; }
+    private HttpClient _httpClient;
+    private bool showError = false;
+    private Task errorTimeoutTask;
+    private bool IsSubmitButtonDisabled => string.IsNullOrWhiteSpace(GetLoginInput()) || string.IsNullOrWhiteSpace(GetPasswordInput()) || isLoading;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var token = await LocalStorage.GetItemAsStringAsync("authToken");
+            Console.WriteLine($"Stored token on initialization: {token}");
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
 
     public void Toggle() => Show = !Show;
 
     private async Task HandleAuth()
     {
+        ErrorMessage = string.Empty;
         try
         {
             HttpResponseMessage response;
             if (IsLoginMode)
-                response = await Http.PostAsJsonAsync("api/Auth/login", LoginModel);
+            {
+                var loginRequest = new LoginRequest { Login = LoginModel.Login, Password = LoginModel.Password };
+                response = await _httpClient.PostAsJsonAsync("api/Auth/login", loginRequest);
+            }
             else
-                response = await Http.PostAsJsonAsync("api/Auth/register", RegisterModel);
+            {
+                var registerRequest = new RegisterRequest { Login = RegisterModel.Login, Password = RegisterModel.Password };
+                response = await _httpClient.PostAsJsonAsync("api/Auth/register", registerRequest);
+            }
 
             if (response.IsSuccessStatusCode)
             {
                 var authResult = await response.Content.ReadFromJsonAsync<AuthResponse>();
-                await LocalStorage.SetItemAsStringAsync("authToken", authResult.Token);
-                Close();
-                NavManager.NavigateTo("/");
+                if (authResult != null && !string.IsNullOrEmpty(authResult.Token))
+                {
+                    await LocalStorage.SetItemAsStringAsync("authToken", authResult.Token);
+                    await LocalStorage.SetItemAsStringAsync("username", authResult.Login);
+                    await LocalStorage.SetItemAsStringAsync("role", authResult.Role);
+
+                    ((CustomAuthStateProvider)AuthStateProvider).MarkUserAsAuthenticated(authResult.Token);
+                    NavManager.NavigateTo("/");
+                }
+                else
+                {
+                    ErrorMessage = "Ошибка: токен не получен";
+                    showError = true;
+                    StateHasChanged();
+                    await Task.Delay(5000);
+                    showError = false;
+                    StateHasChanged();
+                }
             }
             else
             {
-                ErrorMessage = await response.Content.ReadAsStringAsync();
+                var errorContent = await response.Content.ReadAsStringAsync();
+                ErrorMessage = $"Ошибка: {response.StatusCode} - {errorContent}";
+                showError = true;
+                StateHasChanged();
+                await Task.Delay(5000);
+                showError = false;
+                StateHasChanged();
             }
         }
         catch (Exception ex)
         {
-            ErrorMessage = "Ошибка соединения";
+            ErrorMessage = "Ошибка соединения: " + ex.Message;
+            showError = true;
+            StateHasChanged();
+            await Task.Delay(5000);
+            showError = false;
+            StateHasChanged();
         }
     }
 
-    private void Close()
+    private void ShowErrorMessage()
+    {
+        showError = true;
+        StateHasChanged();
+
+        if (errorTimeoutTask != null)
+        {
+            errorTimeoutTask.Dispose();
+        }
+        errorTimeoutTask = Task.Delay(5000).ContinueWith(t =>
+        {
+            showError = false;
+            StateHasChanged();
+        });
+    }
+
+    private async Task Close()
     {
         Show = false;
-        ErrorMessage = "";
-        OnClose.InvokeAsync();
+        ErrorMessage = string.Empty;
+        await OnClose.InvokeAsync();
+    }
+
+    private string GetLoginInput() => IsLoginMode ? LoginModel.Login : RegisterModel.Login;
+    private string GetPasswordInput() => IsLoginMode ? LoginModel.Password : RegisterModel.Password;
+
+    private void UpdateLogin(string login)
+    {
+        if (IsLoginMode)
+            LoginModel.Login = login.Trim();
+        else
+            RegisterModel.Login = login.Trim();
+    }
+
+    private void UpdatePassword(string password)
+    {
+        if (IsLoginMode)
+            LoginModel.Password = password.Trim();
+        else
+            RegisterModel.Password = password.Trim();
     }
 }

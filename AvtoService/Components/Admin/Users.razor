@@ -1,4 +1,7 @@
 ﻿@page "/users"
+@using AvtoService.Data.Models
+@inject HttpClient Http
+@rendermode InteractiveServer
 
 <h1 class="h1fromseconddiv2">Список пользователей</h1>
 
@@ -13,8 +16,15 @@
             @foreach (var user in users)
             {
                 <div class="block">
-                    <h1 class="zafinblock">@user.Login</h1>
-                    <h1 class="price">@user.Password</h1>
+                    <div class="user-info">
+                        <div class="label">Ник</div>
+                        <h1 class="zafinblock">@user.Login</h1>
+                    </div>
+                    <div class="user-info">
+                        <div class="label">Роль</div>
+                        <h1 class="zafinblock">@user.Role</h1>
+                    </div>
+                    <button class="delete-button" @onclick="() => DeleteUser(user.Id)">Удалить</button>
                 </div>
             }
         }
@@ -24,21 +34,45 @@
 @code {
     private List<User> users;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        users = new List<User>
-        {
-            new User { Login = "Иван", Password = "ivan123" },
-            new User { Login = "Петр", Password = "petr123" },
-            new User { Login = "Алексей", Password = "alex123" },
-            new User { Login = "Мария", Password = "mary123" },
-            new User { Login = "Ольга", Password = "olga123" }
-        };
+        await LoadUsers();
     }
 
-    public class User
+    private async Task LoadUsers()
     {
-        public string Login { get; set; }
-        public string Password { get; set; }
+        try
+        {
+            var baseAddress = "https://localhost:7292/";
+            var requestUri = $"{baseAddress}api/Users";
+            users = await Http.GetFromJsonAsync<List<User>>(requestUri);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка при загрузке данных: {ex.Message}");
+        }
+    }
+
+    private async Task DeleteUser(int id)
+    {
+        try
+        {
+            var baseAddress = "https://localhost:7292/";
+            var requestUri = $"{baseAddress}api/Users/{id}";
+            var response = await Http.DeleteAsync(requestUri);
+
+            if (response.IsSuccessStatusCode)
+            {
+                await LoadUsers(); // Перезагружаем список пользователей после удаления
+            }
+            else
+            {
+                Console.WriteLine("Ошибка при удалении пользователя.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка при удалении пользователя: {ex.Message}");
+        }
     }
 }

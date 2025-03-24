@@ -35,113 +35,65 @@ namespace AvtoService.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
-            try
-            {
-                if (await _context.Users.AnyAsync(u => u.Login == request.Login))
-                {
-                    return BadRequest("Логин уже используется");
-                }
-
-                var passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
-                _logger.LogInformation("Длина хэша пароля: {Length}", passwordHash.Length);
-
-                var user = new User
-                {
-                    Login = request.Login,
-                    Password = passwordHash, 
-                    Role = "user",
-                };
-
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
-
-                var token = GenerateJwtToken(user);
-
-                return Ok(new AuthResponse
-                {
-                    Token = token,
-                    Id = user.Id,
-                    Login = user.Login,
-                    Role = user.Role
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Ошибка при регистрации пользователя");
-                return StatusCode(500, "Произошла ошибка на сервере");
-            }
-        }
-
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
-        {
-            try
-            {
-                _logger.LogInformation("Попытка входа: Login = {Login}", request.Login);
-
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Login == request.Login);
-                if (user == null)
-                {
-                    _logger.LogWarning("Не найден пользователь с Login: {Login}", request.Login);
-                    return Unauthorized("Пользователь не найден");
-                }
-
-                bool isPasswordValid = BCrypt.Net.BCrypt.Verify(request.Password, user.Password);
-                if (!isPasswordValid)
-                {
-                    _logger.LogWarning("Неверный пароль для пользователя: {Login}", request.Login);
-                    return Unauthorized("Неверный пароль");
-                }
-
-                var token = GenerateJwtToken(user);
-
-                var response = new LoginResponse
-                {
-                    Token = token,
-                    Id = user.Id,
-                    Login = user.Login,
-                    Role = user.Role ?? "user"
-                };
-
-                _logger.LogInformation("Успешный вход: {Login}", user.Login);
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Ошибка при входе пользователя");
-                return StatusCode(500, "Произошла ошибка на сервере");
-            }
-        }
-
-        [HttpPost("register-admin")]
-        public async Task<IActionResult> RegisterAdmin([FromBody] Data.Requests.RegisterRequest request)
-        {
             if (await _context.Users.AnyAsync(u => u.Login == request.Login))
             {
                 return BadRequest("Логин уже используется");
             }
 
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
-            _logger.LogInformation("Хеш пароля при регистрации админа: {PasswordHash}", passwordHash);
+            _logger.LogInformation("Хеш пароля при регистрации: {PasswordHash}", passwordHash);
 
             var user = new User
             {
                 Login = request.Login,
                 Password = passwordHash,
-                Role = "admin",
+                Role = "user"
             };
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
+            var savedUser = await _context.Users.FirstOrDefaultAsync(u => u.Login == request.Login);
+            _logger.LogInformation("Хеш пароля после сохранения в базу данных: {PasswordHash}", savedUser.Password);
+
+            return Ok(new { Message = "Пользователь успешно зарегистрирован" });
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        {
+            _logger.LogInformation("Попытка входа: Login = {Login}", request.Login);
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Login == request.Login);
+            if (user == null)
+            {
+                _logger.LogWarning("Не найден пользователь: {Login}", request.Login);
+                return Unauthorized("Пользователь не найден");
+            }
+
+            _logger.LogInformation("Найден пользователь: {Login}", user.Login);
+            _logger.LogInformation("Хеш пароля из базы данных: {PasswordHash}", user.Password);
+
+            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(request.Password, user.Password);
+            _logger.LogInformation("Результат проверки пароля: {IsPasswordValid}", isPasswordValid);
+
+            if (!isPasswordValid)
+            {
+                _logger.LogWarning("Неверный пароль для пользователя: {Login}", request.Login);
+                return Unauthorized("Неверный пароль");
+            }
+
+            _logger.LogInformation("Пароль верный, генерируем токен...");
+
             var token = GenerateJwtToken(user);
+
+            _logger.LogInformation("Успешный вход: {Login}, Token = {Token}", user.Login, token);
 
             return Ok(new AuthResponse
             {
                 Token = token,
                 Id = user.Id,
                 Login = user.Login,
-                Password = user.Password,
                 Role = user.Role
             });
         }
@@ -149,12 +101,11 @@ namespace AvtoService.Controllers
         private string GenerateJwtToken(User user)
         {
             var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Login),
-                new Claim("Password", user.Password), 
-                new Claim(ClaimTypes.Role, user.Role ?? "user")
-            };
+    {
+        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+        new Claim(ClaimTypes.Name, user.Login),
+        new Claim(ClaimTypes.Role, user.Role ?? "user")
+    };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -171,5 +122,6 @@ namespace AvtoService.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
     }
 }
